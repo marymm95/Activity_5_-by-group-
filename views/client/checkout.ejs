@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #F9F9F9;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mx-auto p-5">
+        <h1 class="text-4xl font-bold text-black text-center mb-5">Checkout</h1>
+
+        <% if (cartItems && cartItems.length > 0) { %>
+            <table class="min-w-full bg-white border border-black-200 rounded-lg shadow-lg mb-5">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="py-3 px-4 text-left text-black">Product Name</th>
+                        <th class="py-3 px-4 text-left text-black">Quantity</th>
+                        <th class="py-3 px-4 text-left text-black">Price</th>
+                        <th class="py-3 px-4 text-left text-black">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% cartItems.forEach(item => { %>
+                        <tr class="border-b border-black-200">
+                            <td class="py-3 px-4 text-gray-700"><%= item.product.name %></td>
+                            <td class="py-3 px-4 text-gray-700"><%= item.quantity %></td>
+                            <td class="py-3 px-4 text-gray-700">₱<%= item.product.price.toFixed(2) %></td>
+                            <td class="py-3 px-4 text-gray-700">₱<%= (item.quantity * item.product.price).toFixed(2) %></td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+
+            <h3 class="text-xl font-semibold text-black-600 mb-5">
+                Total: ₱<%= cartItems.reduce((sum, item) => sum + item.quantity * item.product.price, 0).toFixed(2) %>
+            </h3>
+
+            <form action="/checkout/confirm" method="POST">
+                <input type="hidden" name="selectedProducts" value='<%= JSON.stringify(cartItems.map(item => ({ id: item.product.id, quantity: item.quantity }))) %>'>
+                <button type="submit">Confirm and Pay</button>
+            </form>
+            
+        <% } else { %>
+            <p class="text-center text-gray-500">No items to checkout.</p>
+        <% } %>
+    </div>
+</body>
+
+</html>

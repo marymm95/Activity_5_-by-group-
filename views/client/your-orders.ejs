@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Orders - Pancit Canton Delights</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+
+    <%- include('../partials/navbar') %>
+
+    <div class="container mx-auto p-5">
+        <h1 class="text-3xl font-bold mb-4 text-black text-center">My Orders</h1>
+
+        <% if (orders && orders.length > 0) { %>
+            <div class="overflow-x-auto rounded-md shadow-md">
+                <table class="min-w-full bg-white rounded-lg shadow-lg">
+                    <thead>
+                        <tr class="bg-black text-white">
+                            <th class="p-4 text-left">Date</th>
+                            <th class="p-4 text-left">Total Amount</th>
+                            <th class="p-4 text-left">Status</th>
+                            <th class="p-4 text-left">Items</th>
+                            <th class="p-4 text-left">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% orders.forEach(order => { %>
+                            <tr class="border-b">
+                                <td class="p-4"><%= order.createdAt.toLocaleDateString() %></td>
+                                <td class="p-4 text-black font-bold">₱<%= order.totalAmount %></td>
+                                <td class="p-4"><%= order.status %></td>
+                                <td class="p-4">
+                                    <ul class="list-disc list-inside">
+                                        <% if (order.orderitems && order.orderitems.length > 0) { %>
+                                            <% order.orderitems.forEach(item => { %>
+                                                <li>
+                                                    <span class="font-semibold">Product:</span> <%= item.product ? item.product.name : 'No product found' %><br>
+                                                    <span class="font-semibold">Quantity:</span> x<%= item.quantity %> <br>
+                                                    <span class="font-semibold">Price:</span> ₱<%= item.product ? item.product.price.toFixed(2) : 'N/A' %> <br>
+                                                </li>
+                                            <% }); %>
+                                        <% } else { %>
+                                            <li>No items in this order.</li>
+                                        <% } %>
+                                    </ul>
+                                </td>
+                                <td class="p-4">
+                                    <% if (order.status === 'shipped') { %>
+                                        <form action="/orders/<%= order.id %>/complete" method="POST">
+                                            <button type="submit" class="bg-black text-white px-4 py-2 rounded-md ">Receive</button>
+                                        </form>
+                                    <% } else if (order.status === 'completed') { %>
+                                        <span class="text-green-600 font-semibold">Order Completed</span>
+                                    <% } else { %>
+                                        <span>Order <%= order.status %></span>
+                                    <% } %>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        <% } else { %>
+            <p class="text-center text-red-600 mt-6">You have no orders yet.</p>
+        <% } %>
+    </div>
+
+</body>
+</html>

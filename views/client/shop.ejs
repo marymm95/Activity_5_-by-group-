@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopGanern</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .no-results {
+            display: none;
+            font-size: 18px;
+            color: red;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <%- include('../partials/navbar') %>
+
+    <div class="container mx-auto p-5">
+        <h1 class="text-3xl font-bold mb-4 text-black-600 text-center">Available Products</h1>
+
+        <input type="text" id="searchInput" placeholder="Search for products..." class="border border-gray-300 p-2 rounded-md w-full mb-4" />
+
+        <div class="product-list grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <% products.forEach(product => { %>
+                <div class="product bg-white rounded-lg shadow-lg p-4 transition-transform transform ">
+                    <h2 class="text-xl font-semibold text-black-600 mb-2"><%= product.name %></h2>
+                    <p class="text-red-700 mb-2"><%= product.description %></p>
+                    <p class="font-bold text-black-600">Price: ₱<%= product.price.toFixed(2) %></p>
+                    <img src="/images/<%= product.image %>" alt="<%= product.name %>" class="mt-2 mb-4 rounded" />
+                    <form action="/add-to-cart/<%= product.id %>" method="post">
+                        <button type="submit" class="bg-black text-white px-4 py-2 rounded-md">Add to Cart</button>
+                    </form>
+                </div>
+            <% }); %>
+        </div>
+
+        <div class="no-results" id="noResults">No available products</div>
+
+        <div class="flex justify-center space-x-4 mt-6">
+            <button id="prevPage" class="bg-yellow-600 text-white px-4 py-2 rounded-md hover:bg-yellow-500 transition duration-300">Previous</button>
+            <span id="currentPage" class="font-bold">1</span>
+            <button id="nextPage" class="bg-yellow-600 text-white px-4 py-2 rounded-md hover:bg-yellow-500 transition duration-300">Next</button>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            const itemsPerPage = 10; 
+            let currentPage = 1;
+            let filteredProducts = $('.product'); 
+            const $productList = $('#productList');
+            const $searchInput = $('#searchInput');
+            const $noResults = $('#noResults');
+
+            function renderProducts() {
+                const totalPages = Math.ceil(filteredProducts.length / itemsPerPage); 
+                const start = (currentPage - 1) * itemsPerPage;
+                const end = start + itemsPerPage;
+
+                $('.product').hide();
+
+                if (filteredProducts.length > 0) {
+                    filteredProducts.slice(start, end).show();
+                    $noResults.hide();
+                } else {
+                    $noResults.show(); 
+                }
+
+                $('#currentPage').text(currentPage);
+                $('#prevPage').prop('disabled', currentPage === 1);
+                $('#nextPage').prop('disabled', currentPage === totalPages);
+            }
+
+            function searchProducts() {
+                const searchTerm = $searchInput.val().toLowerCase();
+
+                filteredProducts = $('.product').filter(function() {
+                    const productName = $(this).find('h2').text().toLowerCase();
+                    return productName.includes(searchTerm);
+                });
+
+                currentPage = 1; 
+                renderProducts();
+            }
+
+            $searchInput.on('input', function() {
+                searchProducts();
+            });
+
+            $('#prevPage').click(function() {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderProducts();
+                }
+            });
+
+            $('#nextPage').click(function() {
+                const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderProducts();
+                }
+            });
+
+            renderProducts();
+        });
+    </script>
+
+</body>
+</html>

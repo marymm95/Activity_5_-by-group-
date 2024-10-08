@@ -1,0 +1,28 @@
+<nav class="bg-white shadow relative sticky">
+    <div class="container mx-auto flex justify-between items-center p-5">
+        <a class="text-2xl font-bold text-black-600" href="#">ShopGanern Na!</a>
+        <div class="hidden md:flex space-x-8">
+            <a href="/home" class="text-black-700 hover:text-red-600">Home</a>
+            <a href="/shop" class="text-black-700 hover:text-red-600">Products</a>
+            <a href="/cart" class="text-black-700 hover:text-red-600">Cart</a>
+            <a href="/your-orders" class="text-black-700 hover:text-red-600">All Orders</a>
+            <a href="/logout" class="text-black-700 hover:text-red-600">Logout</a>
+        </div>
+        <button class="md:hidden text-gray-700 focus:outline-none" id="navbar-toggle">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+            </svg>
+        </button>
+    </div>
+</nav>
+
+<!-- Mobile Navigation -->
+<div class="hidden md:hidden" id="mobile-menu">
+    <div class="flex flex-col items-center space-y-4 p-5 bg-white">
+        <a href="/home" class="text-gray-700 hover:text-yellow-600">Home</a>
+        <a href="/shop" class="text-gray-700 hover:text-yellow-600">Products</a>
+        <a href="/cart" class="text-gray-700 hover:text-yellow-600">Cart</a>
+        <a href="/your-orders" class="text-gray-700 hover:text-yellow-600">Orders</a>
+        <a href="/logout" class="text-gray-700 hover:text-yellow-600">logout</a>
+    </div>
+</div>

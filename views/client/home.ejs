@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopGanern</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+
+    <%- include('../partials/navbar') %>
+
+    <div class="hero h-[60vh] flex items-center justify-center text-center text-white mt-11">
+        <div class="bg-black bg-opacity-70 p-8 rounded-lg">
+            <h1 class="text-4xl font-bold mb-4">Get Amazing Deals</h1>
+            <p class="mb-6">Don't miss the opportunity, Shop your favorite outfit with ShopGanern now!</p>
+            <a href="/shop" class="bg-white text-black px-6 py-3 rounded-full hover:bg-black-600 transition duration-300">Shop Now</a>
+        </div>
+    </div>
+
+    <div class="container mx-auto mt-10">
+        <h2 class="text-center text-3xl font-bold mb-8 text-black-600">Why Us?</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            <div class="bg-white p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                <h4 class="text-xl font-semibold text-black-600 mb-2">Branded Clothes</h4>
+                <p>All clothes are new and branded.</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                <h4 class="text-xl font-semibold text-black-600 mb-2">Delivers Fast</h4>
+                <p>We won't let you down, you'll get your order in time.</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                <h4 class="text-xl font-semibold text-black-600 mb-2">We are responsive</h4>
+                <p>We reply as soon as possible and make you feel valued.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-black bg-opacity-70 text-white py-10 mt-10 text-center">
+        <h3 class="text-2xl font-bold mb-4">Are you ready to go with the trend?</h3>
+        <p class="mb-6">Order now and get what's yours!</p>
+        <a href="/shop" class="bg-black text-white-600 px-6 py-3 rounded-full">Let's Go!</a>
+    </div>
+
+    <script>
+        const toggleButton = document.getElementById('navbar-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        toggleButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>

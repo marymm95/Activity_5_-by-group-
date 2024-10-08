@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Cart</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .btn-minus,
+        .btn-add {
+            background-color: black;
+            color: white;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function updateTotal() {
+            const checkboxes = document.querySelectorAll('input[name="selectedProducts"]:checked');
+            let total = 0;
+
+            checkboxes.forEach((checkbox) => {
+                const price = parseFloat(checkbox.dataset.price);
+                const quantity = parseInt(checkbox.dataset.quantity);
+                total += price * quantity;
+            });
+
+            document.getElementById('totalDisplay').innerText = total.toFixed(2);
+        }
+
+        function updateQuantity(productId, newQuantity) {
+            $.ajax({
+                url: '/cart/update',
+                method: 'POST',
+                data: {
+                    productId: productId,
+                    quantity: newQuantity
+                },
+                success: function(response) {
+                    if (response.success) {
+                        const row = document.getElementById(`product-${productId}`);
+                        row.querySelector('.quantity').innerText = newQuantity;
+                        const price = parseFloat(row.querySelector('.price').dataset.price);
+                        row.querySelector('.total').innerText = (price * newQuantity).toFixed(2);
+                        row.querySelector('input[name="selectedProducts"]').dataset.quantity = newQuantity;
+                        updateTotal();
+                    } else {
+                        alert(response.message || 'Error updating quantity.');
+                    }
+                },
+                error: function() {
+                    alert('An error occurred while updating the quantity.');
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.btn-add').forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = this.dataset.productId;
+                    const quantityField = document.getElementById(`quantity-${productId}`);
+                    let quantity = parseInt(quantityField.innerText);
+                    updateQuantity(productId, ++quantity);
+                });
+            });
+
+            document.querySelectorAll('.btn-minus').forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = this.dataset.productId;
+                    const quantityField = document.getElementById(`quantity-${productId}`);
+                    let quantity = parseInt(quantityField.innerText);
+                    if (quantity > 1) {
+                        updateQuantity(productId, --quantity);
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+
+<body class="bg-gray-50">
+    <%- include('../partials/navbar') %>
+
+    <div class="container mx-auto p-5 bg-white rounded-lg shadow-lg">
+        <h1 class="text-3xl font-bold text-black-600 text-center mb-4">My Cart</h1>
+
+        <% if (cartItems && cartItems.length > 0) { %>
+        <form action="/checkout" method="POST">
+            <table class="w-full mb-4 text-left">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="p-3 text-sm text-gray-600">Select</th>
+                        <th class="p-3 text-sm text-gray-600">Product Name</th>
+                        <th class="p-3 text-sm text-gray-600">Quantity</th>
+                        <th class="p-3 text-sm text-gray-600">Price</th>
+                        <th class="p-3 text-sm text-gray-600">Total</th>
+                        <th class="p-3 text-sm text-gray-600">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% cartItems.forEach(item => { %>
+                    <tr id="product-<%= item.product.id %>" class="border-b">
+                        <td class="p-3">
+                            <input type="checkbox" name="selectedProducts" value="<%= item.product.id %>" data-price="<%= item.product.price %>" data-quantity="<%= item.quantity %>" onchange="updateTotal()">
+                        </td>
+                        <td class="p-3"><%= item.product.name %></td>
+                        <td class="p-3">
+                            <button type="button" class="btn-minus px-2 py-1 rounded-md" data-product-id="<%= item.product.id %>">-</button>
+                            <span id="quantity-<%= item.product.id %>" class="mx-2 quantity"><%= item.quantity %></span>
+                            <button type="button" class="btn-add px-2 py-1 rounded-md" data-product-id="<%= item.product.id %>">+</button>
+                        </td>
+                        <td class="p-3 price" data-price="<%= item.product.price %>">₱<%= item.product.price.toFixed(2) %></td>
+                        <td class="p-3 total">$<%= (item.quantity * item.product.price).toFixed(2) %></td>
+                        <td class="p-3">
+                            <a href="/cart/remove/<%= item.product.id %>" class="text-red-600">Remove</a>
+                        </td>
+                    </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+
+            <div class="flex justify-between items-center">
+                <h3 class="text-xl font-semibold">Total: $<span id="totalDisplay">0.00</span></h3>
+                <button type="submit" class="bg-black text-white px-4 py-2 rounded-md">Continue Checkout</button>
+            </div>
+        </form>
+        <% } else { %>
+        <p class="text-center text-gray-500">Cart is empty.</p>
+        <% } %>
+    </div>
+</body>
+
+</html>

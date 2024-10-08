@@ -1,0 +1,102 @@
+<script src="/js/script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        function confirmDelete(productId) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = `/admin/products/delete/${productId}`;
+                toastr.success('Product deleted successfully');
+            } else {
+                toastr.info('Product deletion cancelled');
+            }
+        });
+    }
+
+    function showApproveAlert(orderId) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You are about to approve this order.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, approve it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Find the form and submit it
+                document.getElementById(`approve-form-${orderId}`).submit();
+            } else {
+                toastr.info('Order approval cancelled');
+            }
+        });
+    }
+
+
+    function showCancelAlert(orderId) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You are about to cancel this order.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, cancel it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Find the form and submit it
+                document.getElementById(`cancel-form-${orderId}`).submit();
+            } else {
+                toastr.info('Order cancellation cancelled');
+            }
+        });
+    }
+
+    function showShipAlert(orderId) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You are about to ship this order.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, ship it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Submit the form if confirmed
+                document.getElementById(`ship-form-${orderId}`).submit();
+            } else {
+                // Optional: Show a toast or notification if they cancel
+                toastr.info('Order shipping cancelled');
+            }
+        });
+    }
+
+    function showDeleteAlert(orderId) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "This action cannot be undone. You are about to delete this order.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Submit the form if confirmed
+                document.getElementById(`delete-form-${orderId}`).submit();
+            } else {
+                // Optional: Show a toast or notification if they cancel
+                toastr.info('Order deletion cancelled');
+            }
+        });
+    }
+
+    </script>
